@@ -1,10 +1,10 @@
 import React from 'react';
-import logo from '../../logo.svg';
+import Recorder from '../../components/Recorder';
 
 function App() {
   return (
-    <div>
-			Learn React
+    <div className='container'>
+			<Recorder />
     </div>
   );
 }

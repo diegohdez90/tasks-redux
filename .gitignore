@@ -253,4 +253,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# json-server
+/data
+
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,react,node,windows,macos,linux

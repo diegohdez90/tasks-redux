@@ -1,9 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { useDispatch } from 'react-redux';
 import type { RootState } from '../../app/store';
+import store from '../../app/store';
+import { thunkFetchEvents } from '../../util/api';
 
 interface Event {
-	"id": string;
+	"id": number;
 	"title": string;
+	"description": string;
 	"dateStart": string;
 	"dateEnd": string;
 }
@@ -23,9 +27,28 @@ export const eventSlice = createSlice({
 	initialState: initialState,
 	reducers: {
 
+	},
+	extraReducers: (builder) => {
+		builder.addCase(thunkFetchEvents.fulfilled, (state, action) => {
+			const events = action.payload;
+
+			state.allIds = events.map(({ id }) => id);
+			state.byId = events.reduce<EventSlice['byId']>((byIds, event) => {
+				byIds[event.id] = event;
+				return byIds;
+			} , {});
+		});
+		builder.addCase(thunkFetchEvents.pending, (state, action) => {
+
+		});
+		builder.addCase(thunkFetchEvents.rejected, (state, action) => {
+
+		});
 	}
 });
 
-export const value = (state: RootState) => null;
+export type EventDispatch = typeof store.dispatch;
+export const useEventDispatch: () => EventDispatch = useDispatch;
+export const value = (state: RootState) => state.events;
 
 export default eventSlice.reducer;

@@ -15,3 +15,5 @@ export type Events = EventDetail[];
 export type EventCard = EventDetail & {
 	uuid: string;
 };
+
+export type EventRecorderBody = Omit<EventDetail, 'id'>;

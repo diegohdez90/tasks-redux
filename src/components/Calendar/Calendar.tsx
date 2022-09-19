@@ -18,10 +18,14 @@ const Calendar = () => {
 		}
 	}, []);
 
-	const createDateKey = (date: Date) => {
-		const year = date.getUTCFullYear();
-		const month = date.getUTCMonth() + 1;
-		const day = date.getUTCDay();
+	const createDateKey = (eventDate: Date) => {
+		console.log(`---------------`);
+		console.log(eventDate);
+
+		const year = eventDate.getUTCFullYear();
+		const month = eventDate.getUTCMonth() + 1;
+		const day = eventDate.getUTCDate();
+		console.log(`${year}-${addZero(month)}-${addZero(day)}`);
 		return `${year}-${addZero(month)}-${addZero(day)}`;
 	}
 
@@ -47,7 +51,6 @@ const Calendar = () => {
 		});
 		return groups;
 	}
-	console.log('events', events);
 
 	let groupEvents: ReturnType<typeof groupByDay> | undefined;
 	let sortedGroups: string[] | undefined;
@@ -55,26 +58,20 @@ const Calendar = () => {
 	if (events.length) {
 		groupEvents = groupByDay(events);
 		sortedGroups = Object.keys(groupEvents).sort((firstDate, secondDate) => {
-			console.log(firstDate);
-			
 			return +new Date(firstDate) - +new Date(secondDate)
 		});
-	}
-
-	console.log('groupEvents', groupEvents);
-	console.log('sortedGroups', sortedGroups);
-	
+	}	
 	
 	return groupEvents && sortedGroups ? (
 		sortedGroups.map((date) => {
 			const events = groupEvents ? groupEvents[date]: [];
 			const groupDate = new Date(date);
-			const day = groupDate.getDate();
+			const day = groupDate.getUTCDate();
 			const month = groupDate.toLocaleString(undefined, {
 				month: 'short'
 			});
 			return (
-				<div key={date} className="row row-striped">
+				<div key={date} className="row row-striped border rounded mt-4 py-2">
 					<div className="col-2 text-center">
 						<h1 className="display-6"><span className="badge bg-primary">{day}</span></h1>
 						<h2>{month}</h2>

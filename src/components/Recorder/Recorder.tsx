@@ -3,10 +3,13 @@ import cx from 'classnames';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { start, stop } from '../../features/recorder/recorderSlice';
 import { addZero } from '../../helpers/addZero';
+import { useEventDispatch } from '../../features/events/eventSlice';
+import { thunkAddEventByRecorder } from '../../util/api';
 
 const Recorder = () => {
 
 	const dispatch = useAppDispatch();
+	const eventDispatch = useEventDispatch();
 	const date = useAppSelector(state => state.recorder.dateStart);
 	const started = date !== '';
 	let interval = useRef<number>(0);
@@ -16,6 +19,12 @@ const Recorder = () => {
 		if (started) {
 			window.clearInterval(interval.current);
 			dispatch(stop())
+			eventDispatch(thunkAddEventByRecorder({
+				title: 'Demo tasks',
+				description: 'Dummy description',
+				dateStart: date,
+				dateEnd: new Date().toISOString()
+			}));
 		} else {
 			dispatch(start());
 			interval.current = window.setInterval(() => {

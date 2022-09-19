@@ -6,6 +6,10 @@ import { addZero } from '../../helpers/addZero';
 import { EventCard, EventDetail } from '../../constants/responseEvent';
 import { v4 } from 'uuid';
 
+interface Props {
+	children: JSX.Element[]
+}
+
 const Calendar = () => {
 
 	const dispatch = useEventDispatch();
@@ -19,13 +23,9 @@ const Calendar = () => {
 	}, []);
 
 	const createDateKey = (eventDate: Date) => {
-		console.log(`---------------`);
-		console.log(eventDate);
-
 		const year = eventDate.getUTCFullYear();
 		const month = eventDate.getUTCMonth() + 1;
 		const day = eventDate.getUTCDate();
-		console.log(`${year}-${addZero(month)}-${addZero(day)}`);
 		return `${year}-${addZero(month)}-${addZero(day)}`;
 	}
 
@@ -60,42 +60,51 @@ const Calendar = () => {
 		sortedGroups = Object.keys(groupEvents).sort((firstDate, secondDate) => {
 			return +new Date(firstDate) - +new Date(secondDate)
 		});
-	}	
+	}
 	
-	return groupEvents && sortedGroups ? (
-		sortedGroups.map((date) => {
-			const events = groupEvents ? groupEvents[date]: [];
-			const groupDate = new Date(date);
-			const day = groupDate.getUTCDate();
-			const month = groupDate.toLocaleString(undefined, {
-				month: 'short'
-			});
-			return (
-				<div key={date} className="row row-striped border rounded mt-4 py-2">
-					<div className="col-2 text-center">
-						<h1 className="display-6"><span className="badge bg-primary">{day}</span></h1>
-						<h2>{month}</h2>
-					</div>
-					<div className="col-10">
-					{events.map(event => 
-						<React.Fragment key={event.uuid}>
-							<div className="col-12">
-								<div className="d-flex flex-row-reverse">
-									<button className='btn'>
-										<i className='bi bi-x'></i>
-									</button>
+	if (groupEvents && sortedGroups) {
+		return (
+			<div className='d-block'>
+				{
+					sortedGroups.map((date) => {
+						const events = groupEvents ? groupEvents[date]: [];
+						const groupDate = new Date(date);
+						const day = groupDate.getUTCDate();
+						const month = groupDate.toLocaleString(undefined, {
+							month: 'short'
+						});
+						return (
+							<div key={date} className="row row-striped border rounded mt-4 py-2">
+								<div className="col-2 text-center">
+									<h1 className="display-6"><span className="badge bg-primary">{day}</span></h1>
+									<h2>{month}</h2>
 								</div>
-							</div>
-							<h3 className="text-uppercase"><strong>{event.title}</strong></h3>
-							<ul className="list-inline">
-								<li className="list-inline-item"><i className="bi bi-clock" aria-hidden="true"></i> {event.dateStart} - 2:00 PM</li>
-							</ul>
-							<p>{event.description}</p>
-						</React.Fragment>
-					)}
-					</div>
-				</div>)
-		})) : <div>Loading...</div>;
+								<div className="col-10">
+								{events.map(event => 
+									<React.Fragment key={event.uuid}>
+										<div className="col-12">
+											<div className="d-flex flex-row-reverse">
+												<button className='btn'>
+													<i className='bi bi-x'></i>
+												</button>
+											</div>
+										</div>
+										<h3 className="text-uppercase"><strong>{event.title}</strong></h3>
+										<ul className="list-inline">
+											<li className="list-inline-item"><i className="bi bi-clock" aria-hidden="true"></i> {event.dateStart} - 2:00 PM</li>
+										</ul>
+										<p>{event.description}</p>
+									</React.Fragment>
+								)}
+								</div>
+							</div>)
+					})
+				}
+			</div>
+		)
+	}
+
+	return <>Loading...</>;
 }
 
 export default Calendar;

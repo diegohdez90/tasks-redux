@@ -2,7 +2,7 @@ import React from 'react';
 import Calendar from '../../components/Calendar';
 import Recorder from '../../components/Recorder';
 
-function App() {
+const App = () => {
   return (
     <div className='container'>
 			<Recorder />

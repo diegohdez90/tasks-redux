@@ -17,3 +17,8 @@ export type EventCard = EventDetail & {
 };
 
 export type EventRecorderBody = Omit<EventDetail, 'id'>;
+
+export type AsyncThunkUpdateEvent = {
+	data: EventDetail,
+	id: number
+}

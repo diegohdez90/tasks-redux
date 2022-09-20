@@ -1,5 +1,5 @@
-import { AsyncThunk, AsyncThunkAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { EventRecorderBody, Events } from '../constants/responseEvent';
+import { AsyncThunk, createAsyncThunk } from '@reduxjs/toolkit';
+import { AsyncThunkUpdateEvent, EventRecorderBody, Events } from '../constants/responseEvent';
 
 export const thunkFetchEvents = createAsyncThunk(
 	'users/events',
@@ -26,11 +26,25 @@ export const thunkAddEventByRecorder = createAsyncThunk(
 export const thunkDeleteEvent = createAsyncThunk(
 	'user/events/delete',
 	async (id: number) => {
-		const response = await fetch(`http://localhost:8080/events/${id}`, {
+		await fetch(`http://localhost:8080/events/${id}`, {
 			method: 'DELETE'
 		});
 		return {
 			id
 		}
+	}
+)
+
+export const thunkUpdateEvent = createAsyncThunk(
+	'user/events/update',
+	async ({data, id}: AsyncThunkUpdateEvent) => {
+		const response = await fetch(`http://localhost:8080/events/${id}`, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(data)
+		});
+		return await response.json();
 	}
 )

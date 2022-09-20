@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import type { RootState } from '../../app/store';
 import store from '../../app/store';
 import { EventDetail } from '../../constants/responseEvent';
-import { thunkAddEventByRecorder, thunkDeleteEvent, thunkFetchEvents } from '../../util/api';
+import { thunkAddEventByRecorder, thunkDeleteEvent, thunkFetchEvents, thunkUpdateEvent } from '../../util/api';
 
 interface Event {
 	"id": number;
@@ -54,11 +54,17 @@ export const eventSlice: Slice<EventSlice> = createSlice({
 			};
 		});
 		builder.addCase(thunkDeleteEvent.fulfilled, (state, action) => {
-			console.log(action.payload);
 			const { id } = action.payload
 			state.byId = { ...state.byId };
 			state.allIds = state.allIds.filter(storeId => storeId !== id);
 			delete state.byId[id];
+		});
+		builder.addCase(thunkUpdateEvent.fulfilled, (state, action) => {
+			const { id } = action.payload;
+			state.byId = {
+				...state.byId,
+				[id]: action.payload
+			};
 		});
 	}
 });

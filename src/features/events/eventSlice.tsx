@@ -1,10 +1,9 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { act } from 'react-dom/test-utils';
+import { createSlice, PayloadAction, Slice } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import type { RootState } from '../../app/store';
 import store from '../../app/store';
 import { EventDetail } from '../../constants/responseEvent';
-import { thunkAddEventByRecorder, thunkFetchEvents } from '../../util/api';
+import { thunkAddEventByRecorder, thunkDeleteEvent, thunkFetchEvents } from '../../util/api';
 
 interface Event {
 	"id": number;
@@ -24,7 +23,7 @@ const initialState: EventSlice = {
 	allIds: []
 }
 
-export const eventSlice = createSlice({
+export const eventSlice: Slice<EventSlice> = createSlice({
 	name: 'event',
 	initialState: initialState,
 	reducers: {
@@ -53,6 +52,13 @@ export const eventSlice = createSlice({
 				...state.byId,
 				[action.payload.id]: action.payload
 			};
+		});
+		builder.addCase(thunkDeleteEvent.fulfilled, (state, action) => {
+			console.log(action.payload);
+			const { id } = action.payload
+			state.byId = { ...state.byId };
+			state.allIds = state.allIds.filter(storeId => storeId !== id);
+			delete state.byId[id];
 		});
 	}
 });

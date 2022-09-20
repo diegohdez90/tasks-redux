@@ -5,10 +5,7 @@ import { useAppSelector } from '../../app/hooks';
 import { addZero } from '../../helpers/addZero';
 import { EventCard, EventDetail } from '../../constants/responseEvent';
 import { v4 } from 'uuid';
-
-interface Props {
-	children: JSX.Element[]
-}
+import EventItem from '../EventItem';
 
 const Calendar = () => {
 
@@ -61,7 +58,7 @@ const Calendar = () => {
 			return +new Date(firstDate) - +new Date(secondDate)
 		});
 	}
-	
+
 	if (groupEvents && sortedGroups) {
 		return (
 			<div className='d-block'>
@@ -81,20 +78,7 @@ const Calendar = () => {
 								</div>
 								<div className="col-10">
 								{events.map(event => 
-									<React.Fragment key={event.uuid}>
-										<div className="col-12">
-											<div className="d-flex flex-row-reverse">
-												<button className='btn'>
-													<i className='bi bi-x'></i>
-												</button>
-											</div>
-										</div>
-										<h3 className="text-uppercase"><strong>{event.title}</strong></h3>
-										<ul className="list-inline">
-											<li className="list-inline-item"><i className="bi bi-clock" aria-hidden="true"></i> {event.dateStart} - 2:00 PM</li>
-										</ul>
-										<p>{event.description}</p>
-									</React.Fragment>
+									<EventItem key={event.uuid} event={event} />
 								)}
 								</div>
 							</div>)
